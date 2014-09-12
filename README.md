@@ -28,7 +28,9 @@ namespace <Your_Namespace_here>
 **Note:** The port will be set to 80 if you are running on "Release" configuration, and 8080 if you are running on "Debug".  
 To run your program in release mode, you need to start visual studio with administrator rights.
 
-To create your first page, use the following template:
+## Pages tutorial
+
+To create your first page, you can use the following template:
 
 ```csharp
 using System.Net;
