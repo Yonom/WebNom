@@ -1,7 +1,7 @@
 WebNom
 ======
 
-A MuffinFramework wrapper around the HttpListener.
+A MuffinFramework wrapper around HttpListener.
 
 ## Getting started
 
