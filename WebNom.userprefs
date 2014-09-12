@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="WebNom\Http\HttpPlatform.cs">
+    <Files>
+      <File FileName="WebNom\WebNomClient.cs" Line="1" Column="1" />
+      <File FileName="WebNom\Http\HttpPlatform.cs" Line="1" Column="1" />
+      <File FileName="WebNom.Demo\Program.cs" Line="10" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
