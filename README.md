@@ -36,9 +36,9 @@ To create your first page, you can use the following template:
 using System.Net;
 using WebNom.Pages;
 
-namespace WebNom.Demo
+namespace <Your_Namespace_here>
 {
-    internal class Index : Page
+    internal class MainPage : Page
     {
         protected override string Path
         {
