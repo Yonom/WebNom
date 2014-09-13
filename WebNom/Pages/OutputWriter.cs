@@ -12,6 +12,11 @@ namespace WebNom.Pages
             this._response = response;
         }
 
+        public void AddHeader(string name, string value)
+        {
+            this._response.AddHeader(name, value);
+        }
+
         public void Write(byte[] bytes)
         {
             this._response.OutputStream.Write(bytes, 0, bytes.Length);
@@ -19,6 +24,8 @@ namespace WebNom.Pages
 
         public void Write(string text)
         {
+            if (text == null) return;
+
             byte[] bytes = Encoding.UTF8.GetBytes(text);
             this.Write(bytes);
         }

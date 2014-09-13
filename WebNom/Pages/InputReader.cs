@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
 using System.Net;
+using System.Web;
 
 namespace WebNom.Pages
 {
@@ -7,14 +11,33 @@ namespace WebNom.Pages
     {
         private readonly HttpListenerRequest _request;
 
+        private readonly Lazy<string> _post;
+        private readonly Lazy<NameValueCollection> _get; 
+
         internal InputReader(HttpListenerRequest request)
         {
             this._request = request;
+
+            this._post = new Lazy<string>(() =>
+            {
+                return new StreamReader(this._request.InputStream).ReadToEnd();
+            });
+
+            this._get = new Lazy<NameValueCollection>(() =>
+            {
+                string input = _request.Url.Query;
+                return HttpUtility.ParseQueryString(input);
+            });
         }
 
-        public string ReadInput()
+        public string Post
         {
-            return new StreamReader(this._request.InputStream).ReadToEnd();
+            get { return _post.Value; }
+        }
+
+        public NameValueCollection Get
+        {
+            get { return _get.Value; }
         }
     }
 }

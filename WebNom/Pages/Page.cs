@@ -29,7 +29,7 @@ namespace WebNom.Pages
 
         protected virtual bool CanHandle(Uri url)
         {
-            return new Regex("^" + this.Path + "$").IsMatch(url.AbsolutePath);
+            return new Regex("^(" + this.Path + ")$").IsMatch(url.AbsolutePath);
         }
 
         protected abstract void Run(HttpListenerContext context, InputReader input, OutputWriter output);

@@ -3,16 +3,16 @@ using WebNom.Pages;
 
 namespace WebNom.Demo
 {
-    internal class Index : Page
+    internal class MainPage : Page
     {
         protected override string Path
         {
-            get { return "/(.*)"; }
+            get { return "/"; }
         }
 
         protected override void Run(HttpListenerContext context, InputReader input, OutputWriter output)
         {
-            output.Write("HAI!");
+            output.Write("Hello world!");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
 using MuffinFramework.Platforms;
@@ -36,17 +37,29 @@ namespace WebNom.Http
 
         private void Work(object state)
         {
+
             while (true)
             {
-                this._listener.BeginGetContext(this.OnConnection, state);
+                this._listener.BeginGetContext(ar =>
+                {
+                    this._resetEvent.Set();
+
+                    ThreadPool.QueueUserWorkItem(o =>
+                    {
+                        try
+                        {
+                            this.OnConnection((IAsyncResult)o);
+                        }
+                        catch (HttpListenerException) { }
+                    }, ar);
+                }, state);
+
                 this._resetEvent.WaitOne();
             }
         }
 
         private void OnConnection(IAsyncResult ar)
         {
-            this._resetEvent.Set();
-
             HttpListenerContext context = this._listener.EndGetContext(ar);
             bool handled = false;
             this.OnReceive(context, ref handled);
@@ -60,7 +73,7 @@ namespace WebNom.Http
 <title>404 Not Found</title>
 </head><body>
 <h1>Not Found</h1>
-<p>The requested URL was not found on this server.</p>
+<p>The requested URL " + context.Request.Url.AbsolutePath + @" was not found on this server.</p>
 </body></html>");
             }
 
