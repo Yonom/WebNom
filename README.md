@@ -61,6 +61,6 @@ The **Path** function specifies what urls are handled by this command. This is p
 - "/profiles/(.+)": Any path that begins with /profiles/
 - "/settings(.php)?": /settings or /settings.php
 
-The **HttpListenerContext** is used to get information about the request that was made.
-The **InputReader** helps you get the data provided with the request (POST data, for example)
+The **HttpListenerContext** is used to get information about the request that was made.  
+The **InputReader** helps you get the data provided with the request (POST data, for example)  
 The **OutputWriter** helps you send text to the user.
