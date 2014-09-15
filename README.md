@@ -1,4 +1,4 @@
-WebNom
+WebNom [![Build status](https://ci.appveyor.com/api/projects/status/96evkkavgnkovs70)](https://ci.appveyor.com/project/Yonom/webnom)
 ======
 
 A [MuffinFramework](https://github.com/Yonom/MuffinFramework) wrapper around HttpListener.
