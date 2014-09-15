@@ -32,7 +32,7 @@ namespace WebNom.Http
 
         internal void Activate(int port)
         {
-            this._listener.Prefixes.Add(String.Format("http://localhost:{0}/", port));
+            this._listener.Prefixes.Add(String.Format("http://*:{0}/", port));
         }
 
         private void Work(object state)
