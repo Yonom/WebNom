@@ -30,9 +30,9 @@ namespace WebNom.Http
             ThreadPool.QueueUserWorkItem(this.Work);
         }
 
-        internal void Activate(int port)
+        internal void Activate(string host, int port)
         {
-            this._listener.Prefixes.Add(String.Format("http://*:{0}/", port));
+            this._listener.Prefixes.Add(String.Format("http://{0}:{1}/", host, port));
         }
 
         private void Work(object state)
