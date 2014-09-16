@@ -76,6 +76,13 @@ namespace WebNom.Http
 <p>The requested URL " + context.Request.Url.AbsolutePath + @" was not found on this server.</p>
 </body></html>");
             }
+            else
+            {
+                if (context.Response.Headers["Content-Type"] == null)
+                {
+                    context.Response.AddHeader("Content-Type", "text/html");
+                }
+            }
 
             context.Response.Close();
         }
