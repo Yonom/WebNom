@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -10,6 +11,8 @@ namespace WebNom.Http
 {
     internal class HttpPlatform : Platform
     {
+        private bool _disposed;
+
         public delegate void ReceiveCallback(HttpListenerContext context, ref bool handled);
 
         private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
@@ -38,8 +41,7 @@ namespace WebNom.Http
 
         private void Work(object state)
         {
-
-            while (true)
+            while (!this._disposed)
             {
                 this._listener.BeginGetContext(ar =>
                 {
@@ -63,11 +65,24 @@ namespace WebNom.Http
                         {
                             Console.WriteLine("IOException: " + ex.Message);
                         }
+                        catch (ObjectDisposedException) { }
                     }, ar);
                 }, state);
 
                 this._resetEvent.WaitOne();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this._disposed = true;
+                this._resetEvent.Set();
+                this._listener.Stop();
+            }
+
+            base.Dispose(disposing);
         }
 
         private void OnConnection(IAsyncResult ar)
