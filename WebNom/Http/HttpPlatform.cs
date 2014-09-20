@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using MuffinFramework.Platforms;
 using WebNom.Pages;
@@ -50,7 +51,18 @@ namespace WebNom.Http
                         {
                             this.OnConnection((IAsyncResult)o);
                         }
-                        catch (HttpListenerException) { }
+                        catch (HttpListenerException ex)
+                        {
+                            Console.WriteLine("HttpListenerException: " + ex.Message);
+                        }
+                        catch (SocketException ex)
+                        {
+                            Console.WriteLine("SocketException: " + ex.Message);
+                        }
+                        catch (IOException ex)
+                        {
+                            Console.WriteLine("IOException: " + ex.Message);
+                        }
                     }, ar);
                 }, state);
 
