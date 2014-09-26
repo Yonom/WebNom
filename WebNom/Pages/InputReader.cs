@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
@@ -9,35 +8,31 @@ namespace WebNom.Pages
 {
     public class InputReader
     {
-        private readonly HttpListenerRequest _request;
-
+        private readonly Lazy<NameValueCollection> _get;
         private readonly Lazy<string> _post;
-        private readonly Lazy<NameValueCollection> _get; 
+        private readonly HttpListenerRequest _request;
 
         internal InputReader(HttpListenerRequest request)
         {
             this._request = request;
 
-            this._post = new Lazy<string>(() =>
-            {
-                return new StreamReader(this._request.InputStream).ReadToEnd();
-            });
+            this._post = new Lazy<string>(() => { return new StreamReader(this._request.InputStream).ReadToEnd(); });
 
             this._get = new Lazy<NameValueCollection>(() =>
             {
-                string input = _request.Url.Query;
+                string input = this._request.Url.Query;
                 return HttpUtility.ParseQueryString(input);
             });
         }
 
         public string Post
         {
-            get { return _post.Value; }
+            get { return this._post.Value; }
         }
 
         public NameValueCollection Get
         {
-            get { return _get.Value; }
+            get { return this._get.Value; }
         }
     }
 }

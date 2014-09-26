@@ -19,12 +19,16 @@ namespace WebNom.Pages
 
         private void _httpPlatform_Receive(HttpListenerContext context, ref bool handled)
         {
-            if (this.CanHandle(context.Request.Url))
+            if (!handled && this.CanHandle(context.Request.Url))
             {
                 handled = true;
-
-                this.Run(context, new InputReader(context.Request), new OutputWriter(context.Response));
+                this.Invoke(context);
             }
+        }
+
+        public void Invoke(HttpListenerContext context)
+        {
+            this.Run(context, new InputReader(context.Request), new OutputWriter(context.Response));
         }
 
         protected virtual bool CanHandle(Uri url)

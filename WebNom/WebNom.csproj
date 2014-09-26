@@ -47,8 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Http\HttpPlatform.cs" />
+    <Compile Include="Pages\DefaultNotFoundPage.cs" />
     <Compile Include="Pages\InputReader.cs" />
     <Compile Include="Pages\OutputWriter.cs" />
+    <Compile Include="Pages\Monitor.cs" />
     <Compile Include="Pages\Page.cs" />
     <Compile Include="WebNomClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

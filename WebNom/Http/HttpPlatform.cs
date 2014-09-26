@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Configuration;
-using System.IO;
 using System.Net;
-using System.Net.Sockets;
 using System.Threading;
 using MuffinFramework.Platforms;
 using WebNom.Pages;
@@ -11,12 +8,13 @@ namespace WebNom.Http
 {
     internal class HttpPlatform : Platform
     {
-        private bool _disposed;
-
         public delegate void ReceiveCallback(HttpListenerContext context, ref bool handled);
+        public delegate void ServerErrorCallback(HttpListenerContext context, Exception ex);
 
         private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
+        private bool _disposed;
         private HttpListener _listener;
+        private Page _errorPage;
 
         public event ReceiveCallback Receive;
 
@@ -24,6 +22,14 @@ namespace WebNom.Http
         {
             ReceiveCallback handler = this.Receive;
             if (handler != null) handler(context, ref handled);
+        }
+
+        public event ServerErrorCallback ServerError;
+
+        protected virtual void OnServerError(HttpListenerContext context, Exception ex)
+        {
+            ServerErrorCallback handler = this.ServerError;
+            if (handler != null) handler(context, ex);
         }
 
         protected override void Enable()
@@ -34,8 +40,9 @@ namespace WebNom.Http
             ThreadPool.QueueUserWorkItem(this.Work);
         }
 
-        internal void Activate(string host, int port)
+        internal void Activate(string host, int port, Page errorPage)
         {
+            this._errorPage = errorPage;
             this._listener.Prefixes.Add(String.Format("http://{0}:{1}/", host, port));
         }
 
@@ -49,24 +56,25 @@ namespace WebNom.Http
 
                     ThreadPool.QueueUserWorkItem(o =>
                     {
+                        HttpListenerContext context = null;
+
                         try
                         {
-                            this.OnConnection((IAsyncResult)o);
+                            context = this._listener.EndGetContext(ar);
+                            this.OnConnection(context);
                         }
-                        catch (HttpListenerException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine("HttpListenerException: " + ex.Message);
+                            try
+                            {
+                                this.OnServerError(context, ex);
+                            }
+                            catch (Exception ex2)
+                            {
+                                Console.WriteLine("Unhandled error while running an error handler: " + ex2);
+                            }
                         }
-                        catch (SocketException ex)
-                        {
-                            Console.WriteLine("SocketException: " + ex.Message);
-                        }
-                        catch (IOException ex)
-                        {
-                            Console.WriteLine("IOException: " + ex.Message);
-                        }
-                        catch (ObjectDisposedException) { }
-                    }, ar);
+                    });
                 }, state);
 
                 this._resetEvent.WaitOne();
@@ -85,30 +93,21 @@ namespace WebNom.Http
             base.Dispose(disposing);
         }
 
-        private void OnConnection(IAsyncResult ar)
+        private void OnConnection(HttpListenerContext context)
         {
-            HttpListenerContext context = this._listener.EndGetContext(ar);
             bool handled = false;
             this.OnReceive(context, ref handled);
 
-            if (!handled)
-            {
-                context.Response.StatusCode = 404;
-                var writer = new OutputWriter(context.Response);
-                writer.Write(@"<!DOCTYPE HTML PUBLIC ""-//IETF//DTD HTML 2.0//EN"">
-<html><head>
-<title>404 Not Found</title>
-</head><body>
-<h1>Not Found</h1>
-<p>The requested URL " + context.Request.Url.AbsolutePath + @" was not found on this server.</p>
-</body></html>");
-            }
-            else
+            if (handled)
             {
                 if (context.Response.Headers["Content-Type"] == null)
                 {
                     context.Response.AddHeader("Content-Type", "text/html");
                 }
+            }
+            else
+            {
+                this._errorPage.Invoke(context);
             }
 
             context.Response.Close();
