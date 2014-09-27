@@ -64,3 +64,26 @@ The **Path** function specifies what urls are handled by this command. This is p
 The **HttpListenerContext** is used to get information about the request that was made.  
 The **InputReader** helps you get the data provided with the request (POST data, for example)  
 The **OutputWriter** helps you send text to the user.
+
+# Monitors tutorial
+Monitors can be used to track any request or error that occures on the server. They can be defined in a way that is similar to pages:
+
+```csharp
+using WebNom.Pages;
+
+namespace <Your_Namespace_here>
+{
+    internal class Logger : Monitor
+    {
+        protected override void OnRequest(HttpListenerContext context)
+        {
+            // TODO: Log visits
+        }
+
+        protected override void OnServerError(HttpListenerContext context, Exception ex)
+        {
+            // TODO: Log the errors
+        }
+    }
+}
+```
