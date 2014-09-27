@@ -14,7 +14,7 @@ namespace WebNom.Pages
 
         public void AddHeader(string name, string value)
         {
-            this._response.AddHeader(name, value);
+            this._response.Headers[name] = value;
         }
 
         public void Write(byte[] bytes)

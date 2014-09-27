@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using MuffinFramework.Platforms;
 using WebNom.Pages;
@@ -95,20 +96,14 @@ namespace WebNom.Http
 
         private void OnConnection(HttpListenerContext context)
         {
+            context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+            context.Response.Headers["X-Powered-By"] = "WebNom/" + Assembly.GetExecutingAssembly().GetName().Version;
+
             bool handled = false;
             this.OnReceive(context, ref handled);
 
-            if (handled)
-            {
-                if (context.Response.Headers["Content-Type"] == null)
-                {
-                    context.Response.AddHeader("Content-Type", "text/html");
-                }
-            }
-            else
-            {
+            if (!handled)
                 this._errorPage.Invoke(context);
-            }
 
             context.Response.Close();
         }
