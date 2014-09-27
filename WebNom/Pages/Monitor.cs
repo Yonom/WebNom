@@ -40,7 +40,5 @@ namespace WebNom.Pages
 
         protected abstract void OnRequest(HttpListenerContext context);
         protected abstract void OnServerError(HttpListenerContext context, Exception ex);
-
-        protected abstract void OnNotFound(HttpListenerContext context);
     }
 }
