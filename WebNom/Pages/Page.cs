@@ -17,6 +17,16 @@ namespace WebNom.Pages
             this._httpPlatform.Receive += this._httpPlatform_Receive;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this._httpPlatform.Receive -= this._httpPlatform_Receive;
+            }
+
+            base.Dispose(disposing);
+        }
+
         private void _httpPlatform_Receive(HttpListenerContext context, ref bool handled)
         {
             if (!handled && this.CanHandle(context.Request.Url))

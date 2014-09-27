@@ -17,6 +17,17 @@ namespace WebNom.Pages
             this._httpPlatform.ServerError += _httpPlatform_ServerError;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this._httpPlatform.Receive -= this._httpPlatform_Receive;
+                this._httpPlatform.ServerError -= _httpPlatform_ServerError;
+            }
+
+            base.Dispose(disposing);
+        }
+
         void _httpPlatform_ServerError(HttpListenerContext context, Exception ex)
         {
             this.OnServerError(context, ex);
