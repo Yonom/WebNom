@@ -1,11 +1,11 @@
-WebNom [![Build status](https://ci.appveyor.com/api/projects/status/96evkkavgnkovs70)](https://ci.appveyor.com/project/Yonom/webnom)
+WebNom [![Build status](https://ci.appveyor.com/api/projects/status/96evkkavgnkovs70)](https://ci.appveyor.com/project/Yonom/webnom) ![NuGet version](https://img.shields.io/nuget/v/WebNom.svg)
 ======
 
 A [MuffinFramework](https://github.com/Yonom/MuffinFramework) wrapper around HttpListener.
 
 ## Getting started
 
-To setup WebNom, create a new console application, download and refrence WebNom.dll and MuffinFramework.dll. Make sure to add a refrence to System.Net.Http as well.
+To setup WebNom, create a new console application and install WebNom's [NuGet](https://www.nuget.org/packages/WebNom) package.
 
 ```csharp
 using System.Threading;
